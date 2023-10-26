@@ -1,3 +1,6 @@
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+
 import javax.swing.BorderFactory;
 import javax.swing.JFrame;
 import javax.swing.JMenu;
@@ -6,7 +9,7 @@ import javax.swing.JMenuItem;
 import javax.swing.JScrollPane;
 import javax.swing.JTextArea;
 
-public class GUI {
+public class GUI implements ActionListener{
 
     JFrame window;
     // Crear area de texto
@@ -19,6 +22,10 @@ public class GUI {
     JMenu menuArchivo, menuEditar, menuFormato, menuColor;
     // Crear items de la pestaña Archivo
     JMenuItem iNuevo, iAbrir, iGuardar, iGuardarComo, iSalir;//itemCortar, itemPegar
+    // Crear objeto de Funciones_Archivo para poder acceder a sus metodos
+    Funciones_Archivo archivo = new Funciones_Archivo(this);
+
+
 
     public static void main(String[] args) throws Exception {
         new GUI();
@@ -71,9 +78,13 @@ public class GUI {
     public void createFileMenu(){
 
         iNuevo = new JMenuItem("Nuevo");
+        iNuevo.addActionListener(this);
+        iNuevo.setActionCommand("Nuevo");
         menuArchivo.add(iNuevo);
 
         iAbrir = new JMenuItem("Abrir");
+        iAbrir.addActionListener(this);
+        iAbrir.setActionCommand("Abrir");
         menuArchivo.add(iAbrir);
 
         iGuardar = new JMenuItem("Guardar");
@@ -85,5 +96,24 @@ public class GUI {
         iSalir = new JMenuItem("Salir");
         menuArchivo.add(iSalir);
 
+    }
+
+    @Override
+    public void actionPerformed(ActionEvent e) {
+
+        String command = e.getActionCommand();
+
+        switch (command) {
+            case "Nuevo": 
+                archivo.nuevo();
+                break;
+            case "Abrir": 
+                archivo.abrir();
+                break;
+        
+            default:
+                break;
+        }
+        
     }
 }
