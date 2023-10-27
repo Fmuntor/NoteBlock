@@ -9,7 +9,7 @@ import javax.swing.JMenuItem;
 import javax.swing.JScrollPane;
 import javax.swing.JTextArea;
 
-public class GUI implements ActionListener{
+public class GUI implements ActionListener {
 
     JFrame window;
     // Crear area de texto
@@ -21,7 +21,7 @@ public class GUI implements ActionListener{
     // Crear items de barra de menu
     JMenu menuArchivo, menuEditar, menuFormato, menuColor;
     // Crear items de la pestaña Archivo
-    JMenuItem iNuevo, iAbrir, iGuardar, iGuardarComo, iSalir;//itemCortar, itemPegar
+    JMenuItem iNuevo, iAbrir, iGuardar, iGuardarComo, iSalir;// itemCortar, itemPegar
     // Crear objeto de Funciones_Archivo para poder acceder a sus metodos
     Funciones_Archivo archivo = new Funciones_Archivo(this);
     // Items pensaña Formato
@@ -29,9 +29,9 @@ public class GUI implements ActionListener{
     JMenu menuFont, menuFontSize; // Al tener dentro más opciones, es un JMenu
     boolean wordWrapOn = false;
     Funciones_Formato formato = new Funciones_Formato(this);
-
-
-
+    // Pestaña Color
+    JMenuItem iColorBlanco, iColorNegro, iColorAzul;
+    Funciones_Color color = new Funciones_Color(this);
 
     public static void main(String[] args) throws Exception {
         new GUI();
@@ -42,35 +42,40 @@ public class GUI implements ActionListener{
         createTextArea();
         createMenuBar();
 
-        createFileMenu();
+        crearMenuArchivo();
         crearMenuFormato();
+        crearMenuColor();
 
         formato.fuenteSeleccionada = "Arial"; // Seleccionar una fuente como predeterminada
         formato.crearFuente(16); // Seleccionar tamaño como predeterminado
         formato.wordWrap(); // Asignar a ON el WordWrap por defecto
         window.setVisible(true);
 
+        color.cambiarColor("Blanco");
+        window.setVisible(true);
+
     }
 
-    public void createWindow(){
+    public void createWindow() {
         window = new JFrame("NoteBlock");
         window.setSize(800, 600);
         window.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
     }
 
-    public void createTextArea(){
+    public void createTextArea() {
         textArea = new JTextArea();
 
-        scrollPane = new JScrollPane(textArea, JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED, JScrollPane.HORIZONTAL_SCROLLBAR_AS_NEEDED);
+        scrollPane = new JScrollPane(textArea, JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED,
+                JScrollPane.HORIZONTAL_SCROLLBAR_AS_NEEDED);
 
-        //Eliminar el borde al scroll
+        // Eliminar el borde al scroll
         scrollPane.setBorder(BorderFactory.createEmptyBorder());
         window.add(scrollPane);
 
-        //window.add(textArea);
+        // window.add(textArea);
     }
 
-    public void createMenuBar(){
+    public void createMenuBar() {
         menuBar = new JMenuBar();
         window.setJMenuBar(menuBar);
 
@@ -87,7 +92,7 @@ public class GUI implements ActionListener{
         menuBar.add(menuColor);
     }
 
-    public void createFileMenu(){
+    public void crearMenuArchivo() {
 
         iNuevo = new JMenuItem("Nuevo");
         iNuevo.addActionListener(this);
@@ -116,7 +121,7 @@ public class GUI implements ActionListener{
 
     }
 
-    public void crearMenuFormato(){
+    public void crearMenuFormato() {
         iWrap = new JMenuItem("Word Wrap: OFF");
         iWrap.addActionListener(this);
         iWrap.setActionCommand("Word Wrap");
@@ -129,7 +134,7 @@ public class GUI implements ActionListener{
         iArial.addActionListener(this);
         iArial.setActionCommand("Arial");
         menuFont.add(iArial);
-        
+
         iCSMS = new JMenuItem("Comic Sans MS");
         iCSMS.addActionListener(this);
         iCSMS.setActionCommand("ComicSansMS");
@@ -167,8 +172,23 @@ public class GUI implements ActionListener{
         iSize28.addActionListener(this);
         iSize28.setActionCommand("28pt");
         menuFontSize.add(iSize28);
+    }
 
+    public void crearMenuColor() {
+        iColorBlanco = new JMenuItem("Blanco");
+        iColorBlanco.addActionListener(this);
+        iColorBlanco.setActionCommand("Blanco");
+        menuColor.add(iColorBlanco);
 
+        iColorNegro = new JMenuItem("Negro");
+        iColorNegro.addActionListener(this);
+        iColorNegro.setActionCommand("Negro");
+        menuColor.add(iColorNegro);
+
+        iColorAzul = new JMenuItem("Azul");
+        iColorAzul.addActionListener(this);
+        iColorAzul.setActionCommand("Azul");
+        menuColor.add(iColorAzul);
 
     }
 
@@ -179,10 +199,10 @@ public class GUI implements ActionListener{
 
         switch (command) {
             // Pestaña archivo
-            case "Nuevo": 
+            case "Nuevo":
                 archivo.nuevo();
                 break;
-            case "Abrir": 
+            case "Abrir":
                 archivo.abrir();
                 break;
             case "Guardar como":
@@ -207,24 +227,34 @@ public class GUI implements ActionListener{
             case "Word Wrap":
                 formato.wordWrap();
                 break;
-            case "8pt": 
+            case "8pt":
                 formato.crearFuente(8);
                 break;
-            case "12pt": 
+            case "12pt":
                 formato.crearFuente(12);
                 break;
-            case "16pt": 
+            case "16pt":
                 formato.crearFuente(16);
                 break;
-            case "24pt": 
+            case "24pt":
                 formato.crearFuente(24);
                 break;
-            case "28pt": 
+            case "28pt":
                 formato.crearFuente(28);
+                break;
+            // Pestaña Color
+            case "Blanco":
+                color.cambiarColor(command);
+                break;
+            case "Negro":
+                color.cambiarColor(command);
+                break;
+            case "Azul":
+                color.cambiarColor(command);
                 break;
             default:
                 break;
         }
-        
+
     }
 }
