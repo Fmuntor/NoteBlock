@@ -8,7 +8,7 @@ public class Funciones_Color {
         this.gui = gui;
     }
 
-    public void cambiarColor(String color) {
+    /*public void cambiarColor(String color) {
         switch (color) {
             case "Blanco":
                 // gui.window.getContentPane().setBackground(Color.red);
@@ -26,5 +26,6 @@ public class Funciones_Color {
             default:
                 break;
         }
-    }
+    }*/
+    
 }

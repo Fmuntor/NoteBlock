@@ -1,15 +1,20 @@
+import java.awt.Color;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
 import javax.swing.BorderFactory;
+import javax.swing.JColorChooser;
 import javax.swing.JFrame;
 import javax.swing.JMenu;
 import javax.swing.JMenuBar;
 import javax.swing.JMenuItem;
+import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTextArea;
+import javax.swing.event.ChangeEvent;
+import javax.swing.event.ChangeListener;
 
-public class GUI implements ActionListener {
+public class GUI implements ActionListener, ChangeListener {
 
     JFrame window;
     // Crear area de texto
@@ -30,9 +35,12 @@ public class GUI implements ActionListener {
     boolean wordWrapOn = false;
     Funciones_Formato formato = new Funciones_Formato(this);
     // Pestaña Color
-    JMenuItem iColorBlanco, iColorNegro, iColorAzul;
+    /*JMenuItem iColorBlanco, iColorNegro, iColorAzul;
     Funciones_Color color = new Funciones_Color(this);
-
+    */
+    JColorChooser cc1, cc2;
+    JMenu menuColorTXT, menuColorFondo;
+    JPanel elegirColorTXT, elegirColorFondo;
     public static void main(String[] args) throws Exception {
         new GUI();
     }
@@ -51,8 +59,12 @@ public class GUI implements ActionListener {
         formato.wordWrap(); // Asignar a ON el WordWrap por defecto
         window.setVisible(true);
 
-        color.cambiarColor("Blanco");
+        /*color.cambiarColor("Blanco");*/
+        textArea.setBackground(Color.white);
+        textArea.setForeground(Color.black);
         window.setVisible(true);
+        
+        
 
     }
 
@@ -175,6 +187,7 @@ public class GUI implements ActionListener {
     }
 
     public void crearMenuColor() {
+        /*
         iColorBlanco = new JMenuItem("Blanco");
         iColorBlanco.addActionListener(this);
         iColorBlanco.setActionCommand("Blanco");
@@ -189,7 +202,48 @@ public class GUI implements ActionListener {
         iColorAzul.addActionListener(this);
         iColorAzul.setActionCommand("Azul");
         menuColor.add(iColorAzul);
+        */
 
+        menuColorTXT = new JMenu("Color del texto");
+        menuColor.add(menuColorTXT);
+
+        elegirColorTXT = new JPanel();
+        elegirColorTXT.setBounds(100,50,600,300);
+        elegirColorTXT.setBackground(Color.black);
+        menuColorTXT.add(elegirColorTXT);
+
+        cc1 = new JColorChooser();
+        cc1.getSelectionModel().addChangeListener(new ChangeListener() {
+            @Override
+            public void stateChanged(ChangeEvent e) {
+                Color nuevoColor = cc1.getColor();
+                textArea.setForeground(nuevoColor);
+            }
+        });
+        //cc.setPreviewPanel(new JPanel());// Para que no salga la ventana preview
+        //cc.removeChooserPanel(cc.getChooserPanels()[]); // Seleccionar que pestañas eliminar 0-4
+        elegirColorTXT.add(cc1);
+
+        menuColorFondo = new JMenu("Color del fondo");
+        menuColor.add(menuColorFondo);
+
+        elegirColorFondo = new JPanel();
+        elegirColorFondo.setBounds(100,50,600,300);
+        elegirColorFondo.setBackground(Color.black);
+        menuColorFondo.add(elegirColorFondo);
+
+        cc2 = new JColorChooser();
+        cc2.getSelectionModel().addChangeListener(new ChangeListener() {
+            @Override
+            public void stateChanged(ChangeEvent e) {
+                Color nuevoFondo = cc2.getColor();
+                textArea.setBackground(nuevoFondo);
+            }
+        });
+        //cc.setPreviewPanel(new JPanel());// Para que no salga la ventana preview
+        //cc.removeChooserPanel(cc.getChooserPanels()[]); // Seleccionar que pestañas eliminar 0-4
+        elegirColorFondo.add(cc2);
+        
     }
 
     @Override
@@ -243,7 +297,7 @@ public class GUI implements ActionListener {
                 formato.crearFuente(28);
                 break;
             // Pestaña Color
-            case "Blanco":
+            /*case "Blanco":
                 color.cambiarColor(command);
                 break;
             case "Negro":
@@ -254,7 +308,15 @@ public class GUI implements ActionListener {
                 break;
             default:
                 break;
+            */
         }
 
     }
+
+    @Override
+    public void stateChanged(ChangeEvent e) {
+        
+    }
+
+    
 }
