@@ -24,6 +24,12 @@ public class GUI implements ActionListener{
     JMenuItem iNuevo, iAbrir, iGuardar, iGuardarComo, iSalir;//itemCortar, itemPegar
     // Crear objeto de Funciones_Archivo para poder acceder a sus metodos
     Funciones_Archivo archivo = new Funciones_Archivo(this);
+    // Items pensaña Formato
+    JMenuItem iWrap, iArial, iCSMS, iTNR, iSize8, iSize12, iSize16, iSize24, iSize28;
+    JMenu menuFont, menuFontSize; // Al tener dentro más opciones, es un JMenu
+    boolean wordWrapOn = false;
+    Funciones_Formato formato = new Funciones_Formato(this);
+
 
 
 
@@ -35,7 +41,13 @@ public class GUI implements ActionListener{
         createWindow();
         createTextArea();
         createMenuBar();
+
         createFileMenu();
+        crearMenuFormato();
+
+        formato.fuenteSeleccionada = "Arial"; // Seleccionar una fuente como predeterminada
+        formato.crearFuente(16); // Seleccionar tamaño como predeterminado
+        formato.wordWrap(); // Asignar a ON el WordWrap por defecto
         window.setVisible(true);
 
     }
@@ -104,12 +116,69 @@ public class GUI implements ActionListener{
 
     }
 
+    public void crearMenuFormato(){
+        iWrap = new JMenuItem("Word Wrap: OFF");
+        iWrap.addActionListener(this);
+        iWrap.setActionCommand("Word Wrap");
+        menuFormato.add(iWrap);
+
+        menuFont = new JMenu("Fuente");
+        menuFormato.add(menuFont);
+
+        iArial = new JMenuItem("Arial");
+        iArial.addActionListener(this);
+        iArial.setActionCommand("Arial");
+        menuFont.add(iArial);
+        
+        iCSMS = new JMenuItem("Comic Sans MS");
+        iCSMS.addActionListener(this);
+        iCSMS.setActionCommand("ComicSansMS");
+        menuFont.add(iCSMS);
+
+        iTNR = new JMenuItem("Times New Roman");
+        iTNR.addActionListener(this);
+        iTNR.setActionCommand("TimesNewRoman");
+        menuFont.add(iTNR);
+
+        menuFontSize = new JMenu("Tamaño de letra");
+        menuFormato.add(menuFontSize);
+
+        iSize8 = new JMenuItem("8");
+        iSize8.addActionListener(this);
+        iSize8.setActionCommand("8pt");
+        menuFontSize.add(iSize8);
+
+        iSize12 = new JMenuItem("12");
+        iSize12.addActionListener(this);
+        iSize12.setActionCommand("12pt");
+        menuFontSize.add(iSize12);
+
+        iSize16 = new JMenuItem("16");
+        iSize16.addActionListener(this);
+        iSize16.setActionCommand("16pt");
+        menuFontSize.add(iSize16);
+
+        iSize24 = new JMenuItem("24");
+        iSize24.addActionListener(this);
+        iSize24.setActionCommand("24pt");
+        menuFontSize.add(iSize24);
+
+        iSize28 = new JMenuItem("28");
+        iSize28.addActionListener(this);
+        iSize28.setActionCommand("28pt");
+        menuFontSize.add(iSize28);
+
+
+
+    }
+
     @Override
     public void actionPerformed(ActionEvent e) {
 
         String command = e.getActionCommand();
 
         switch (command) {
+            // Pestaña archivo
             case "Nuevo": 
                 archivo.nuevo();
                 break;
@@ -124,6 +193,34 @@ public class GUI implements ActionListener{
                 break;
             case "Salir":
                 archivo.salir();
+                break;
+            // Pestaña Formato
+            case "Arial":
+                formato.setFuente(command);
+                break;
+            case "TimesNewRoman":
+                formato.setFuente(command);
+                break;
+            case "ComicSansMS":
+                formato.setFuente(command);
+                break;
+            case "Word Wrap":
+                formato.wordWrap();
+                break;
+            case "8pt": 
+                formato.crearFuente(8);
+                break;
+            case "12pt": 
+                formato.crearFuente(12);
+                break;
+            case "16pt": 
+                formato.crearFuente(16);
+                break;
+            case "24pt": 
+                formato.crearFuente(24);
+                break;
+            case "28pt": 
+                formato.crearFuente(28);
                 break;
             default:
                 break;
