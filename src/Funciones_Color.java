@@ -1,5 +1,3 @@
-import java.awt.Color;
-
 public class Funciones_Color {
 
     GUI gui;
@@ -27,5 +25,5 @@ public class Funciones_Color {
                 break;
         }
     }*/
-    
+
 }

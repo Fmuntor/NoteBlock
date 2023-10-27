@@ -8,11 +8,15 @@ import javax.swing.JFrame;
 import javax.swing.JMenu;
 import javax.swing.JMenuBar;
 import javax.swing.JMenuItem;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTextArea;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
+import javax.swing.event.UndoableEditEvent;
+import javax.swing.event.UndoableEditListener;
+import javax.swing.undo.UndoManager;
 
 public class GUI implements ActionListener, ChangeListener {
 
@@ -26,7 +30,7 @@ public class GUI implements ActionListener, ChangeListener {
     // Crear items de barra de menu
     JMenu menuArchivo, menuEditar, menuFormato, menuColor;
     // Crear items de la pestaña Archivo
-    JMenuItem iNuevo, iAbrir, iGuardar, iGuardarComo, iSalir;// itemCortar, itemPegar
+    JMenuItem iNuevo, iAbrir, iGuardar, iGuardarComo, iSalir;
     // Crear objeto de Funciones_Archivo para poder acceder a sus metodos
     Funciones_Archivo archivo = new Funciones_Archivo(this);
     // Items pensaña Formato
@@ -41,6 +45,11 @@ public class GUI implements ActionListener, ChangeListener {
     JColorChooser cc1, cc2;
     JMenu menuColorTXT, menuColorFondo;
     JPanel elegirColorTXT, elegirColorFondo;
+    // Pestaña Editar
+    JMenuItem iUndo, iRedo;
+    UndoManager undoManager = new UndoManager();
+    Funciones_Editar editar = new Funciones_Editar(this);
+
     public static void main(String[] args) throws Exception {
         new GUI();
     }
@@ -53,6 +62,7 @@ public class GUI implements ActionListener, ChangeListener {
         crearMenuArchivo();
         crearMenuFormato();
         crearMenuColor();
+        crearMenuEditar();
 
         formato.fuenteSeleccionada = "Arial"; // Seleccionar una fuente como predeterminada
         formato.crearFuente(16); // Seleccionar tamaño como predeterminado
@@ -76,6 +86,13 @@ public class GUI implements ActionListener, ChangeListener {
 
     public void createTextArea() {
         textArea = new JTextArea();
+        textArea.getDocument().addUndoableEditListener(
+            new UndoableEditListener() {
+                public void undoableEditHappened(UndoableEditEvent e){
+                    undoManager.addEdit(e.getEdit());
+                }
+            }
+        );
 
         scrollPane = new JScrollPane(textArea, JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED,
                 JScrollPane.HORIZONTAL_SCROLLBAR_AS_NEEDED);
@@ -131,6 +148,18 @@ public class GUI implements ActionListener, ChangeListener {
         iSalir.setActionCommand("Salir");
         menuArchivo.add(iSalir);
 
+    }
+
+    public void crearMenuEditar(){
+        iUndo = new JMenuItem("Deshacer");
+        iUndo.addActionListener(this);
+        iUndo.setActionCommand("Undo");
+        menuEditar.add(iUndo);
+
+        iRedo = new JMenuItem("Rehacer");
+        iRedo.addActionListener(this);
+        iRedo.setActionCommand("Redo");
+        menuEditar.add(iRedo);
     }
 
     public void crearMenuFormato() {
@@ -257,7 +286,9 @@ public class GUI implements ActionListener, ChangeListener {
                 archivo.nuevo();
                 break;
             case "Abrir":
+                undoManager.setLimit(0);
                 archivo.abrir();
+                undoManager.setLimit(100);
                 break;
             case "Guardar como":
                 archivo.guardarComo();
@@ -309,6 +340,21 @@ public class GUI implements ActionListener, ChangeListener {
             default:
                 break;
             */
+            // Pestaña Editar
+            case "Undo":
+                try {
+                    editar.undo();
+                } catch (Exception ex) {
+                    JOptionPane.showMessageDialog(window, "ERROR: No puedes echar patrás.", "¡¡¡HA PETAO!!!",JOptionPane.ERROR_MESSAGE);
+                }
+                break;
+            case "Redo":
+                try {
+                    editar.redo();
+                } catch (Exception ex) {
+                    JOptionPane.showMessageDialog(window, "ERROR: No puedes echar palante.", "¡¡¡HA PETAO!!!",JOptionPane.ERROR_MESSAGE);
+                }
+                break;
         }
 
     }
